@@ -11,7 +11,7 @@ const Modal = ({ isOpen, onClose, children, isModal = true, ...props }: ModalPro
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center z-50">
       {isOpen && <div className="fixed inset-0 bg-black opacity-40" onClick={onClose} />}
       <div className="fixed bg-white rounded-lg p-[10px] flex flex-col items-center" {...props}>
         {isModal && (

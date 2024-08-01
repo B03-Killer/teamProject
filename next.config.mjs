@@ -4,12 +4,6 @@ const nextConfig = {
     remotePatterns: [
       {
         hostname: 'ripbxzxpvscuqgdjpkix.supabase.co'
-      },
-      {
-        hostname: 'i.pinimg.com'
-      },
-      {
-        hostname: 'lh3.googleusercontent.com'
       }
     ]
   },

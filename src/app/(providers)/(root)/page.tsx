@@ -6,6 +6,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import Image from 'next/image';
 import Link from 'next/link';
 import { signInWithKakao } from './auth/_utils/kakaoLogin';
+import KakaoIcon from '@/icons/Kakao.svg';
 
 const mockData = [
   {
@@ -63,10 +64,11 @@ const LandingPage = () => {
               onClick={signInWithKakao}
               className="flex justify-center items-center w-full h-[56px] text-lg font-medium bg-[#FEE502] rounded-lg text-[#3B1E1D] px-[22px] py-[12px]"
             >
-              카카오로 시작하기
+              <KakaoIcon className="h-6 w-6" />
+              <span className="ml-3">카카오로 시작하기</span>
             </button>
           </div>
-          <div className="pb-7 text-[14px] text-[#333] flex justify-center items-center ">
+          <div className="pb-7 text-[14px] text-[#2F323C] flex justify-center items-center ">
             <Link href="/auth/login">이메일로 로그인</Link> ㅣ <Link href="/auth/signup">회원가입</Link>
           </div>
         </div>

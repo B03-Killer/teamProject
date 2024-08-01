@@ -1,8 +1,8 @@
 import dayjs, { Dayjs } from 'dayjs';
 
 const changeDateStr = (start: string, end: string): string => {
-  const startTime = dayjs(start).format('hh:mm');
-  const endTime = dayjs(end).format('hh:mm');
+  const startTime = dayjs(start).format('HH:mm');
+  const endTime = dayjs(end).format('HH:mm');
 
   return `${startTime} ~ ${endTime}`;
 };

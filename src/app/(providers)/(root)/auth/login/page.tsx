@@ -1,7 +1,4 @@
 'use client';
-import useShallowSelector from '@/hooks/useShallowSelector';
-import { useAuthStore } from '@/providers/AuthStoreProvider';
-import { AuthStoreTypes } from '@/store/authStore';
 import useUserStore from '@/store/userStore';
 import { supabase } from '@/utils/supabase/supabaseClient';
 import { useMutation } from '@tanstack/react-query';
@@ -10,16 +7,10 @@ import { useState } from 'react';
 import BackButton from '../_components/BackButton';
 import { setCookie } from '../_utils/cookieUtils';
 
-type UserType = {
-  user: AuthStoreTypes['user'];
-};
-
 const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const setUserData = useUserStore((state) => state.setUserData);
-  const workspaceId = useUserStore((state) => state.workspaceId);
-  const { user } = useShallowSelector<AuthStoreTypes, UserType>(useAuthStore, ({ user }) => ({ user }));
   const route = useRouter();
 
   // TODO : 리팩터링 예정
@@ -42,12 +33,11 @@ const LoginPage = () => {
         return alert('사용자 정보가 일치하지 않습니다.');
       }
 
-      console.log(session.user.id);
-
       const { data: workspaceUserData, error: workspaceUserError } = await supabase
         .from('workspace_user')
         .select('workspace_id')
         .eq('user_id', session.user.id)
+        .order('created_at', { ascending: false })
         .limit(1)
         .single();
 
@@ -80,7 +70,7 @@ const LoginPage = () => {
         </h1>
         <div className="flex flex-col gap-[24px]">
           <div className="flex flex-col">
-            <label className="text-[14px] text-[#333] opacity-60 pl-[6px] pb-2" htmlFor="email">
+            <label className="text-[14px] text-[#2F323C] pl-[6px] pb-2" htmlFor="email">
               이메일주소
             </label>
             <input
@@ -93,8 +83,8 @@ const LoginPage = () => {
               required={true}
             />
           </div>
-          <div className="flex flex-col pb-[13px] ">
-            <label className="text-[14px] text-[#333] opacity-60 pl-[6px] pb-2" htmlFor="password">
+          <div className="flex flex-col ">
+            <label className="text-[14px] text-[#2F323C] pl-[6px] pb-2" htmlFor="password">
               비밀번호
             </label>
             <input
@@ -108,7 +98,7 @@ const LoginPage = () => {
             />
           </div>
         </div>
-        <div className="flex justify-center pb-4">
+        <div className="flex justify-center mt-[40px]">
           <button
             onClick={() => emailLoginMutate()}
             className="w-full text-lg py-[12px] px-[22px] bg-[#7173FA] text-white rounded-lg shadow-md"
@@ -117,7 +107,8 @@ const LoginPage = () => {
             {loginMutation.isPending ? '로그인 중입니다...' : '로그인'}
           </button>
         </div>
-        <button className="text-[#333] text-center text-[12px] font-normal underline">비밀번호를 잊으셨나요?</button>
+        {/* // TODO: MVP이후 비밀번호 찾기 구현  */}
+        {/* <button className="text-[#333] text-center text-[12px] font-normal underline">비밀번호를 잊으셨나요?</button> */}
       </div>
     </main>
   );

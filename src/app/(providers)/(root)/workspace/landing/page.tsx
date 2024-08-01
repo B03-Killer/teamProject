@@ -48,8 +48,6 @@ const InviteCodePage = () => {
         return;
       }
 
-      console.log('카카오 워크스페이스 유저 ID: ', workspaceData.id);
-
       setCookie('userToken', String(workspaceData.id), 1);
       setUserData(user.id, workspaceData.id);
 

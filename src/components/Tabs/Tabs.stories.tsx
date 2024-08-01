@@ -1,4 +1,4 @@
-import { Tabs, Tab, TabProps } from './Tabs';
+import { Tab, TabProps, Tabs } from './Tabs';
 
 export default {
   title: 'Components/Tabs',
@@ -22,9 +22,7 @@ export const Default = (args: TabProps) => (
       사진・동영상
     </Tab>
     <Tab {...args}>파일</Tab>
-    <Tab {...args} active>
-      공지
-    </Tab>
+    <Tab {...args}>공지</Tab>
   </Tabs>
 );
 

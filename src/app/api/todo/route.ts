@@ -37,7 +37,7 @@ export const DELETE = async (request: NextRequest) => {
   const supabase = createClient();
 
   try {
-    const { error } = await supabase.from('todo').delete().eq('id', Number(todoId!));
+    const { error } = await supabase.from('todo').delete().eq('id', todoId!);
 
     if (error)
       return NextResponse.json({

@@ -1,12 +1,12 @@
 import GearIcon from '@/icons/Gear.svg';
-import UserIcon from '@/icons/User.svg';
+import UserIcon from '@/icons/User2.svg';
 import {
   useLocalParticipantPermissions,
   useMaybeLayoutContext,
   usePersistentUserChoices
 } from '@livekit/components-react';
 import { Track } from 'livekit-client';
-import React from 'react';
+import { HTMLAttributes, useCallback, useEffect, useMemo, useState } from 'react';
 import TrackToggle from '../../../_components/TrackToggle';
 import { useMediaQuery } from '../../_hooks/useMediaQuery';
 import { supportsScreenSharing } from '../../_utils/supportsScreenSharing';
@@ -20,7 +20,7 @@ export type ControlBarControls = {
   settings?: boolean;
 };
 
-export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
+export interface ControlBarProps extends HTMLAttributes<HTMLDivElement> {
   variation?: 'minimal' | 'verbose' | 'textOnly';
   controls?: ControlBarControls;
   /**
@@ -33,9 +33,10 @@ export interface ControlBarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const BottomControlBar = ({ variation, controls, saveUserChoices = true, ...props }: ControlBarProps) => {
-  const [isChatOpen, setIsChatOpen] = React.useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
   const layoutContext = useMaybeLayoutContext();
-  React.useEffect(() => {
+  useEffect(() => {
     if (layoutContext?.widget.state?.showChat !== undefined) {
       setIsChatOpen(layoutContext?.widget.state?.showChat);
     }
@@ -61,14 +62,14 @@ const BottomControlBar = ({ variation, controls, saveUserChoices = true, ...prop
     visibleControls.chat ??= localPermissions.canPublishData && controls?.chat;
   }
 
-  const showIcon = React.useMemo(() => variation === 'minimal' || variation === 'verbose', [variation]);
-  const showText = React.useMemo(() => variation === 'textOnly' || variation === 'verbose', [variation]);
+  const showIcon = useMemo(() => variation === 'minimal' || variation === 'verbose', [variation]);
+  const showText = useMemo(() => variation === 'textOnly' || variation === 'verbose', [variation]);
 
   const browserSupportsScreenSharing = supportsScreenSharing();
 
-  const [isScreenShareEnabled, setIsScreenShareEnabled] = React.useState(false);
+  const [isScreenShareEnabled, setIsScreenShareEnabled] = useState(false);
 
-  const onScreenShareChange = React.useCallback(
+  const onScreenShareChange = useCallback(
     (enabled: boolean) => {
       setIsScreenShareEnabled(enabled);
     },
@@ -78,18 +79,18 @@ const BottomControlBar = ({ variation, controls, saveUserChoices = true, ...prop
   const { saveAudioInputEnabled, saveVideoInputEnabled, saveAudioInputDeviceId, saveVideoInputDeviceId } =
     usePersistentUserChoices({ preventSave: !saveUserChoices });
 
-  const microphoneOnChange = React.useCallback(
+  const microphoneOnChange = useCallback(
     (enabled: boolean, isUserInitiated: boolean) => (isUserInitiated ? saveAudioInputEnabled(enabled) : null),
     [saveAudioInputEnabled]
   );
 
-  const cameraOnChange = React.useCallback(
+  const cameraOnChange = useCallback(
     (enabled: boolean, isUserInitiated: boolean) => (isUserInitiated ? saveVideoInputEnabled(enabled) : null),
     [saveVideoInputEnabled]
   );
 
   return (
-    <div className="flex border-t-2  justify-between mx-4 p-4 fixed bottom-1 right-0 left-0  bg-white w-[100vw] ">
+    <div className="flex border-t-2  justify-between mx-4 p-4 fixed bottom-1 bg-white w-[100vw] ">
       {visibleControls.microphone && (
         <div className="">
           <TrackToggle source={Track.Source.Microphone} showIcon={showIcon} onChange={microphoneOnChange}></TrackToggle>
@@ -128,12 +129,6 @@ const BottomControlBar = ({ variation, controls, saveUserChoices = true, ...prop
       <button className="w-12 h-6 flex justify-center">
         <GearIcon />
       </button>
-      {/* {visibleControls.leave && (
-        <DisconnectButton>
-          {showIcon && <LeaveIcon />}
-          {showText && 'Leave'}
-        </DisconnectButton>
-      )} */}
     </div>
   );
 };

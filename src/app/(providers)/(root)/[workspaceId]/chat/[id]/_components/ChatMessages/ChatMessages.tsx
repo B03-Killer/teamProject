@@ -13,6 +13,8 @@ type ChatMessagesProps = {
 // TODO: video onLoad event 가 있으면 모두 다 로딩된 후에 스크롤을 가장 아래로 내리도록 수정
 
 const ChatMessages = ({ data = [], usersInChannel = {} }: ChatMessagesProps) => {
+  if (Object.keys(usersInChannel).length === 0) return null;
+
   return (
     <>
       {data.map((chat) => {
@@ -28,11 +30,13 @@ const ChatMessages = ({ data = [], usersInChannel = {} }: ChatMessagesProps) => 
                     userInfo.profile_image ??
                     'https://blog.kakaocdn.net/dn/bCXLP7/btrQuNirLbt/N30EKpk07InXpbReKWzde1/img.png'
                   }
+                  width={50}
+                  height={50}
                 />
                 <ChatOtherProfileName>{userInfo.name}</ChatOtherProfileName>
               </ChatOtherProfileContainer>
             )}
-            <ChatMessage chat={chat} isMe={isMe} />
+            <ChatMessage content={chat.content} type={chat.type} id={chat.id} isMe={isMe} />
           </ChatContainer>
         );
       })}

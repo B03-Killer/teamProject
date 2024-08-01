@@ -3,8 +3,8 @@ import { HTMLAttributes } from 'react';
 import Typography from '../Typography';
 
 type LabelProps = {
-  htmlFor: string;
-  color: 'primary200Main' | 'grey700Black' | 'error' | undefined;
+  htmlFor?: string;
+  color?: 'primary200Main' | 'grey400' | 'grey700Black' | 'error' | undefined;
   className?: string;
 } & HTMLAttributes<HTMLLabelElement>;
 

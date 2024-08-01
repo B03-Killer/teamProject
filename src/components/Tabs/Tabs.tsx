@@ -1,17 +1,19 @@
 import clsx from 'clsx';
-import React, { ElementType, ReactNode } from 'react';
+import React, { AnchorHTMLAttributes, ElementType, ReactNode } from 'react';
 
-export interface TabProps {
+type AttributeProps = React.HTMLAttributes<HTMLElement> | AnchorHTMLAttributes<HTMLAnchorElement>;
+
+export type TabProps = {
   children: ReactNode;
   active?: boolean;
   as?: ElementType;
   className?: string;
-}
+} & AttributeProps;
 
-interface TabsProps {
+type TabsProps = {
   children: ReactNode;
   className?: string;
-}
+} & AttributeProps;
 
 const Tabs = ({ children, className, ...props }: TabsProps) => {
   const childrenArray = React.Children.toArray(children);

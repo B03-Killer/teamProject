@@ -1,16 +1,17 @@
 import clsx from 'clsx';
-import { ReactNode } from 'react';
+import Tag from '../Tag';
 import Typography from '../Typography';
 
 export interface TodoCardProps {
-  title: string;
+  title?: string;
   subtitle?: string;
-  tag?: ReactNode;
+  tag?: 'high' | 'medium' | 'low';
   onClick?: React.MouseEventHandler<HTMLDivElement>;
-  className: string;
+  className?: string;
 }
 
 const TodoCard = ({ title, subtitle, onClick, tag, className, ...props }: TodoCardProps) => {
+  const renderTag = tag ? <Tag theme={tag}>{tag.charAt(0).toUpperCase() + tag.slice(1)}</Tag> : null;
   return (
     <div
       className={clsx(
@@ -30,7 +31,7 @@ const TodoCard = ({ title, subtitle, onClick, tag, className, ...props }: TodoCa
           </Typography>
         )}
       </div>
-      {tag}
+      {renderTag}
     </div>
   );
 };

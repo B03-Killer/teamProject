@@ -1,15 +1,15 @@
 import Typography from '@/components/Typography';
 import useChannelUser from '@/hooks/useChannelUser';
 import useWorkspaceId from '@/hooks/useWorkspaceId';
-import ArrowLeftIcon from '@/icons/ArrowLeft.svg';
-import LeaveIcon from '@/icons/LogOut.svg';
 import useEnterdChannelStore from '@/store/enteredChannelStore';
 import useStreamSetStore from '@/store/streamSetStore';
 import useUserStore from '@/store/userStore';
 import { useParams, useRouter } from 'next/navigation';
 import { useCallback } from 'react';
+import DeviceMenuButton from '../../../_components/DeviceMenuButton';
 import DisconnectButton from '../../../_components/DisconnectButton';
 import { deleteChannel } from '../../_utils/videoChannelDelete';
+
 const VideoChannelHeader = () => {
   const params = useParams();
   const router = useRouter();
@@ -32,13 +32,11 @@ const VideoChannelHeader = () => {
 
   return (
     <div className="flex items-center justify-between px-4 py-3 mt-[2px]">
-      <ArrowLeftIcon className="size-7" onClick={() => router.back()} />
+      <DeviceMenuButton />
       <Typography color="grey700Black" variant="Title20px" as="h2">
         {name}
       </Typography>
-      <DisconnectButton onClick={handleLeaveChannel}>
-        <LeaveIcon />
-      </DisconnectButton>
+      <DisconnectButton onClick={handleLeaveChannel}>{'종료'}</DisconnectButton>
     </div>
   );
 };

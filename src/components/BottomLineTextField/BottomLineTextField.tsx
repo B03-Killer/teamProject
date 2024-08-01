@@ -1,17 +1,19 @@
 import clsx from 'clsx';
-import { useEffect, useId, useState } from 'react';
+import { ReactNode, useEffect, useId, useRef, useState } from 'react';
 import Label from '../Label';
 
 export interface BottomTextFieldProps {
-  children: string;
+  children?: ReactNode;
   className?: string;
-  id: string;
+  id?: string;
   label?: string;
   labelClassName?: string;
   value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
-  LabelColor: 'primary200Main' | 'grey700Black' | 'error' | undefined;
+  LabelColor: 'primary200Main' | 'grey400' | 'grey700Black' | 'error' | undefined;
+  buttonTitle?: string;
+  onClick?: () => void;
 }
 
 const BottomLineTextField = ({
@@ -30,8 +32,10 @@ const BottomLineTextField = ({
   const customId = id || inputId;
   const [isFocused, setIsFocused] = useState(false);
   const [state, setState] = useState<'default' | 'focus' | 'typing'>('default');
+  const valueRef = useRef(value);
 
   useEffect(() => {
+    valueRef.current = value;
     setState(value ? 'typing' : 'default');
   }, [value]);
 
@@ -49,7 +53,7 @@ const BottomLineTextField = ({
 
   const handleBlur = () => {
     setIsFocused(false);
-    if (value) {
+    if (valueRef.current) {
       setState('typing');
     } else {
       setState('default');
@@ -124,13 +128,13 @@ const BottomLineTextField = ({
   );
 
   return (
-    <div className="relative text-field flex flex-col gap-2" {...props}>
+    <div className="relative flex flex-col gap-2 w-full" {...props}>
       {label && (
         <Label htmlFor={customId} color={LabelColor} className={clsx(labelClassName, className)}>
           {label}
         </Label>
       )}
-      <div className="flex flex-row items-center justify-center">
+      <div className="flex flex-row items-center justify-center w-full">
         <input
           id={customId}
           value={value}
@@ -138,7 +142,10 @@ const BottomLineTextField = ({
           className={inputClassNames}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          onChange={onChange}
+          onChange={(e) => {
+            valueRef.current = e.target.value;
+            onChange(e);
+          }}
         />
         <span className="absolute right-3 transform cursor-pointer">{renderIcon()}</span>
       </div>

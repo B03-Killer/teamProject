@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import CheckBox, { CheckBoxProps } from './CheckBox';
+import { useState } from 'react';
+import CheckBox from './CheckBox';
 
 export default {
   title: 'Components/CheckBox',
@@ -9,45 +9,31 @@ export default {
   },
   tags: ['autodocs'],
   argTypes: {
+    theme: {
+      control: 'select',
+      options: ['primary', 'grey'],
+      description: '체크박스의 테마 색상',
+      defaultValue: 'primary'
+    },
     children: {
       control: 'text',
-      description: '체크될 항목의 내용'
+      description: '체크박스 옆에 표시할 텍스트'
     },
-    theme: {
-      control: {
-        type: 'select',
-        options: ['primary200', 'grey100']
-      },
-      description: '체크박스 테마',
-      defaultValue: 'primary200'
-    },
-    isChecked: {
-      description: '체크 여부를 나타내는 boolean 값입니다.'
-    },
-    onClick: { action: 'clicked', description: '체크박스 클릭 이벤트' }
+    onClick: {
+      action: 'clicked',
+      description: '체크박스가 클릭될 때 호출되는 함수'
+    }
   }
 };
 
-export const Default = (args: CheckBoxProps) => {
-  const [isChecked, setIsChecked] = useState(args.isChecked);
-
-  useEffect(() => {
-    setIsChecked(args.isChecked);
-  }, [args.isChecked]);
-
-  const handleChange = () => {
-    setIsChecked(!isChecked);
-  };
+export const Checkbox = () => {
+  const [checked, setChecked] = useState(false);
 
   return (
-    <CheckBox theme={args.theme} isChecked={isChecked} onClick={handleChange}>
-      약관 전체 동의
-    </CheckBox>
+    <CheckBox
+      theme="primary"
+      onClick={(newChecked) => setChecked(newChecked)}
+      children={checked ? 'Checked' : 'Unchecked'}
+    />
   );
-};
-
-Default.args = {
-  isChecked: false,
-  theme: 'primary200',
-  children: '약관 전체 동의'
 };

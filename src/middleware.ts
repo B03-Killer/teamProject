@@ -3,7 +3,6 @@ import { NextResponse, type NextRequest } from 'next/server';
 const EMAIL_TOKEN = 'sb-ripbxzxpvscuqgdjpkix-auth-token';
 const KAKAO_TOKEN_0 = 'sb-ripbxzxpvscuqgdjpkix-auth-token.0';
 const KAKAO_TOKEN_1 = 'sb-ripbxzxpvscuqgdjpkix-auth-token.1';
-const AUTH_PATHS = ['/auth', '/workspace'];
 
 export const middleware = (request: NextRequest) => {
   console.log('redirect 미들웨어 실행~~~');
@@ -32,13 +31,6 @@ export const middleware = (request: NextRequest) => {
     }
     return NextResponse.next();
   }
-
-  // if (pathname.startsWith('/workspace')) {
-  //   if (emailToken) {
-  //     return NextResponse.redirect(new URL(`/${userToken}`, request.url));
-  //   }
-  //   return NextResponse.next();
-  // }
 
   if (pathname === '/') {
     if (emailToken || kakaoToken0 || kakaoToken1) {

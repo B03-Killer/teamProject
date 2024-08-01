@@ -19,7 +19,7 @@ class TodoAPI {
 
     return data;
   }
-  async delTodo(todoId: number) {
+  async delTodo(todoId: string) {
     const path = '/api/todo';
     const response = await this.axios.delete(path, {
       params: {

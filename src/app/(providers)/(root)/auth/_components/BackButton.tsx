@@ -1,5 +1,6 @@
 'use client';
 import { useRouter } from 'next/navigation';
+import ArrowLeftIcon from '@/icons/ArrowLeft.svg';
 
 type BackButtonProps = {
   className?: string;
@@ -8,8 +9,8 @@ type BackButtonProps = {
 const BackButton = ({ className = '' }: BackButtonProps) => {
   const route = useRouter();
   return (
-    <button onClick={() => route.back()} className={`text-[20px] font-bold text-[#333333] ${className}`}>
-      ←
+    <button onClick={() => route.back()} className={`${className}`}>
+      <ArrowLeftIcon className="h-[24px] w-[24px]" />
     </button>
   );
 };

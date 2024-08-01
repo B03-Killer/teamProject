@@ -18,7 +18,7 @@ const useTodoList = (workspaceUserId: string | null) => {
   });
 
   const { mutateAsync: delTodo } = useMutation({
-    mutationFn: (todoId: number) => api.todo.delTodo(todoId),
+    mutationFn: (todoId: string) => api.todo.delTodo(todoId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['todo'] });
     }

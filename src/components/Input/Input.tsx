@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface InputProps {
   type?: string;
@@ -6,7 +6,7 @@ export interface InputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
-  id: string;
+  id?: string;
   status?: 'default' | 'error' | 'success';
   togglePasswordVisibility?: boolean;
   onFocus?: () => void;
@@ -28,6 +28,7 @@ const Input = ({
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [state, setState] = useState<'default' | 'focus' | 'typing'>('default');
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     setState(value ? 'typing' : 'default');
@@ -40,8 +41,9 @@ const Input = ({
   };
 
   const handleFocus = () => {
-    setIsFocused(true);
-    setState('focus');
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
   };
 
   const handleBlur = () => {
@@ -232,7 +234,8 @@ const Input = ({
         onChange={onChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        className={`px-[16px] py-[12px] pr-[40px] border rounded-lg shadow-md focus:outline-none text-[16px] ${getBorderClass()}`}
+        ref={inputRef}
+        className={`px-[16px] py-[12px] pr-[40px] border rounded-lg shadow-md focus:outline-none text-[16px] w-full ${getBorderClass()}`}
         {...props}
       />
       <span className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer">{renderIcon()}</span>

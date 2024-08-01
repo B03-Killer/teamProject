@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import ChatDetail from './_components/ChatDetail';
-import Sidebar from './_components/Sidebar';
+import ChatDetail from '../_components/ChatDetail';
+import Sidebar from '../_components/Sidebar';
 import MenuIcon from '@/icons/menu.svg';
-import TestHeader from '../_components/TestHeader';
+import TestHeader from '../../_components/TestHeader';
+import DropdownMenu from '../ContextMenu/ContextMenu';
 
 const ChatDetailPage = () => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
@@ -31,6 +32,7 @@ const ChatDetailPage = () => {
       <Sidebar
         className={`transition-transform duration-300 will-change-transform ${isOpenSidebar ? '-translate-x-0' : 'translate-x-[100%]'}`}
       />
+      <DropdownMenu />
     </div>
   );
 };

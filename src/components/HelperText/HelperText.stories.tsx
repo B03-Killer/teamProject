@@ -7,7 +7,21 @@ export default {
   parameters: {
     layout: 'centered'
   },
-  tags: ['autodocs']
+  tags: ['autodocs'],
+  argTypes: {
+    message: {
+      control: 'text',
+      description: '도움 텍스트로 표시할 메시지입니다.'
+    },
+    isError: {
+      control: 'boolean',
+      description: '오류 메시지를 표시할지 여부입니다.'
+    },
+    isSuccess: {
+      control: 'boolean',
+      description: '성공 메시지를 표시할지 여부입니다.'
+    }
+  }
 };
 
 const Template: StoryFn<HelperTextProps> = (args) => <HelperText {...args} />;

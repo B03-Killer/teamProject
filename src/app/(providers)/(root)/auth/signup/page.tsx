@@ -32,6 +32,8 @@ const SignUpPage = () => {
         }
       });
 
+      if (error?.message === 'Email rate limit exceeded') return alert('이메일 전송 할당량이 초과되었습니다.');
+
       if (error) return alert(`회원가입 중 에러 : ${error.message}`);
 
       if (data) {

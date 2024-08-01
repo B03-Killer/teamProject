@@ -12,7 +12,7 @@ const ToDoListPage = () => {
   if (!todoList) return;
   const beforeTodoList = todoList.filter((todo) => todo.status === '진행 전');
   const progressTodoList = todoList.filter((todo) => todo.status === '진행 중');
-  const completedTodoList = todoList.filter((todo) => todo.status === '진행 완료');
+  const completedTodoList = todoList.filter((todo) => todo.status === '완료');
 
   return (
     <>
@@ -24,7 +24,7 @@ const ToDoListPage = () => {
         <WeekDate />
         <ToDoList title="진행 전" todoList={beforeTodoList} />
         <ToDoList title="진행 중" todoList={progressTodoList} />
-        <ToDoList title="진행 완료" todoList={completedTodoList} />
+        <ToDoList title="완료" todoList={completedTodoList} />
       </main>
     </>
   );
