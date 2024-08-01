@@ -1,3 +1,4 @@
+'use client';
 import { defaultUserChoices, log } from '@livekit/components-core';
 import { LocalUserChoices, useMediaDevices, usePersistentUserChoices } from '@livekit/components-react';
 

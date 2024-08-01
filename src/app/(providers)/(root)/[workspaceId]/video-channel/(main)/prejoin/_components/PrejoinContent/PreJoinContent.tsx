@@ -1,5 +1,6 @@
 'use client';
 import useWorkspaceId from '@/hooks/useWorkspaceId';
+import useEnterdChannelStore from '@/store/enteredChannelStore';
 import useStreamSetStore from '@/store/streamSetStore';
 import { LocalUserChoices, usePersistentUserChoices } from '@livekit/components-react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,6 +16,8 @@ const PreJoinContent = () => {
   const router = useRouter();
   const { setIsSettingOk } = useStreamSetStore();
   const { userChoices } = usePersistentUserChoices();
+  const { setEnteredChannelId } = useEnterdChannelStore();
+
   useEffect(() => {
     setIsSettingOk(true);
   }, []);

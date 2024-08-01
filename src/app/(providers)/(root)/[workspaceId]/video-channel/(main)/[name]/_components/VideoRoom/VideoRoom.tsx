@@ -8,9 +8,8 @@ import useUserStore from '@/store/userStore';
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 import { RoomConnectOptions } from 'livekit-client';
 import { redirect, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Loading from '../../../_components/Loading';
-import { deleteChannel } from '../../_utils/videoChannelDelete';
 import CustomVideoConference from '../VideoConference/CustomVideoConference';
 
 type videoRoomProps = {
@@ -44,14 +43,6 @@ const VideoRoom = ({ name }: videoRoomProps) => {
     })();
   }, []);
 
-  const onLeave = useCallback(() => {
-    if (!workspaceUserId) return;
-    leaveChannel(workspaceUserId);
-    deleteChannel(enteredChannelId);
-    setIsSettingOk(false);
-    router.push(`/${workspaceId}/chat`);
-  }, []);
-
   const connectOptions = useMemo((): RoomConnectOptions => {
     return {
       autoSubscribe: true
@@ -73,7 +64,7 @@ const VideoRoom = ({ name }: videoRoomProps) => {
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
       style={{ height: '100vh' }}
       connectOptions={connectOptions}
-      onDisconnected={onLeave}
+      onDisconnected={() => console.log('연결 해제')}
     >
       <CustomVideoConference />
       <RoomAudioRenderer />
