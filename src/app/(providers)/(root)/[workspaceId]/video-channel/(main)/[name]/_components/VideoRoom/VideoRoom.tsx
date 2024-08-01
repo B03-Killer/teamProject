@@ -1,13 +1,12 @@
 'use client';
 
-import useChannelUser from '@/hooks/useChannelUser';
 import useWorkspaceId from '@/hooks/useWorkspaceId';
 import useEnterdChannelStore from '@/store/enteredChannelStore';
 import useStreamSetStore from '@/store/streamSetStore';
 import useUserStore from '@/store/userStore';
 import { LiveKitRoom, RoomAudioRenderer } from '@livekit/components-react';
 import { RoomConnectOptions } from 'livekit-client';
-import { redirect, useRouter, useSearchParams } from 'next/navigation';
+import { redirect, useSearchParams } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 import Loading from '../../../_components/Loading';
 import CustomVideoConference from '../VideoConference/CustomVideoConference';
@@ -18,13 +17,11 @@ type videoRoomProps = {
 
 const VideoRoom = ({ name }: videoRoomProps) => {
   const workspaceId = useWorkspaceId();
-  const router = useRouter();
   const params = useSearchParams();
   const [token, setToken] = useState('');
 
-  const { preJoinChoices, isSettingOk, setIsSettingOk } = useStreamSetStore();
+  const { preJoinChoices, isSettingOk } = useStreamSetStore();
   const { enteredChannelId } = useEnterdChannelStore();
-  const { leaveChannel } = useChannelUser({ channelId: enteredChannelId! });
   const { workspaceUserId } = useUserStore();
 
   useEffect(() => {

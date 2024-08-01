@@ -1,10 +1,10 @@
 'use client';
 
+import { CHANNEL_TYPE } from '@/constants/channel';
+import useWorkspaceId from '@/hooks/useWorkspaceId';
+import { ChannelType } from '@/types/channel';
 import { useRouter } from 'next/navigation';
 import { useMutationCreateChannel, useMutationCreateChannelUsers } from '../../_hooks/useMutationChat';
-import { ChannelType } from '@/types/channel';
-import useWorkspaceId from '@/hooks/useWorkspaceId';
-import { CHANNEL_TYPE } from '@/constants/channel';
 
 //TODO: 임시 코드
 const WORKSPACE_ID = 2;

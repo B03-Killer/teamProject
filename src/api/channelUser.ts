@@ -22,6 +22,7 @@ class ChannelUserAPI {
     return response.data;
   }
 
+  //  channel_id 의 채널에 workspaceUserIds 의 유저 입장.
   async createChannelUsers({ workspaceUserIds, channel_id }: CreateChannelUserParams) {
     const response = await this.axios.post(this.path, {
       workspaceUserIds,
