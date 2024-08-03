@@ -2,14 +2,14 @@
 import useShallowSelector from '@/hooks/useShallowSelector';
 import { useAuthStore } from '@/providers/AuthStoreProvider';
 import { AuthStoreTypes } from '@/store/authStore';
-import useUserStore from '@/store/userStore';
-import { supabase } from '@/utils/supabase/supabaseClient';
-import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useSnackBar } from '@/providers/SnackBarContext';
 import { setWorkspaceId, setWorkspaceUserId } from '@/utils/workspaceCookie';
 import { TopBar } from '@/components/TopBar';
+import useSetGlobalUser from '@/hooks/useSetGlobalUser';
+import Button from '@/components/Button';
+import { getWorkspaceUserId, useCreateWorkspace, useUpdateWorkspaceId } from './_hooks/useNewWorkspace';
 
 const getRandomNumbers = (count: number, min: number, max: number) => {
   const range = Array.from({ length: max - min + 1 }, (_, i) => i + min);
@@ -24,111 +24,64 @@ type UserType = {
 const NewWorkSpacePage = () => {
   const route = useRouter();
   const [orgName, setOrgName] = useState<string | ''>('');
-  const [workUserData, setWorkUserData] = useState<{ id: string } | null>(null);
-  const setUserData = useUserStore((state) => state.setUserData);
   const { user } = useShallowSelector<AuthStoreTypes, UserType>(useAuthStore, ({ user }) => ({ user }));
+  const { handleSetGlobalUser } = useSetGlobalUser();
   const { openSnackBar } = useSnackBar();
 
-  // TODO : 리팩터링 예정
-  const handleJoin = useMutation({
-    mutationFn: async () => {
-      if (!user) {
-        openSnackBar({ message: '로그인이 필요해요' });
-        route.push('/landing');
-        return;
-      }
-      if (!orgName) return openSnackBar({ message: '조직 이름을 입력해주세요!' });
+  const { mutateAsync: updateWorkspaceIdMutation } = useUpdateWorkspaceId();
 
-      if (!workUserData) {
-        openSnackBar({ message: '워크스페이스에 유저 데이터가 없어요' });
-        return;
-      }
+  const { data: workspaceUserId, isError } = getWorkspaceUserId({
+    userId: user?.id || '',
+    enabled: !!user
+  });
 
-      const randomNumbers = getRandomNumbers(6, 1, 9);
-      const combinedNumber = Number(randomNumbers.join(''));
-
-      const { error } = await supabase.from('workspace').insert({
-        name: orgName,
-        invite_code: combinedNumber,
-        admin_user_id: workUserData.id
-      });
-
-      if (error) {
-        openSnackBar({ message: '오류가 발생했어요' });
-        return;
-      }
-
-      const { data: workspaceData, error: workspaceError } = await supabase
-        .from('workspace')
-        .select('id')
-        .eq('admin_user_id', workUserData.id)
-        .single();
-
-      if (workspaceError) {
-        openSnackBar({ message: `워크스페이스 생성 중 오류가 발생했습니다. ${workspaceError.message}` });
-        return;
-      }
-
-      if (!workspaceData) {
-        openSnackBar({ message: '워크스페이스 생성 중 오류가 발생했어요' });
-        return;
-      }
-
-      const { error: workspaceUserError } = await supabase
-        .from('workspace_user')
-        .update({ workspace_id: workspaceData.id })
-        .eq('user_id', user.id);
-
-      if (workspaceUserError) {
-        openSnackBar({ message: '오류가 발생했어요' });
-        return;
-      }
-
-      setWorkspaceId(workspaceData.id);
-      setWorkspaceUserId(user.id);
-      setUserData(user.id, workspaceData.id);
-
-      // TODO : 생성 완료 후 페이지 이동처리하기
-      setOrgName('');
-      route.replace('/welcome');
+  const { mutateAsync: createWorkspaceMutation, isPending: createWorkspacePending } = useCreateWorkspace({
+    onError: () => {
+      openSnackBar({ message: '워크스페이스 생성에 실패했어요 다시 시도해주세요' });
+      return;
     }
   });
 
-  const { mutate: handleJoinMutate } = handleJoin;
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
+    if (!workspaceUserId || !user) {
+      route.replace('/');
+      return;
+    }
+
+    if (!orgName) {
+      openSnackBar({ message: '조직 이름을 입력해주세요!' });
+      return;
+    }
+
+    const randomNumbers = getRandomNumbers(6, 1, 9);
+    const combinedNumber = Number(randomNumbers.join(''));
+
+    const workspaceId = await createWorkspaceMutation({
+      orgName,
+      inviteCode: combinedNumber,
+      workspaceUserId
+    });
+
+    await updateWorkspaceIdMutation({ workspaceId, userId: user.id });
+
+    handleSetGlobalUser({ userId: user.id, workspaceId: workspaceId });
+
+    route.replace('/welcome');
+  };
+
+  /** 로그인을 하지 않은 경우 초기 페이지로 이동합니다 */
   useEffect(() => {
-    const getWorkspaceUser = async () => {
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+    if (user?.id) return;
 
-      if (!user) {
-        return;
-      }
-
-      const { data: workspaceUserData, error: workspaceUserError } = await supabase
-        .from('workspace_user')
-        .select('id')
-        .eq('user_id', user.id)
-        .single();
-
-      if (workspaceUserError) {
-        openSnackBar({ message: '오류가 발생했어요' });
-        route.replace('/');
-        return;
-      }
-
-      if (!workspaceUserData) {
-        openSnackBar({ message: '해당 유저는 워크스페이스에 속해있지 않아요' });
-        route.replace('/');
-        return;
-      }
-
-      setWorkUserData({ id: workspaceUserData.id });
-    };
-
-    getWorkspaceUser();
+    route.replace('/');
   }, []);
+
+  if (isError) {
+    route.replace('/');
+    return;
+  }
 
   return (
     <main className="flex justify-center items-center">
@@ -137,12 +90,7 @@ const NewWorkSpacePage = () => {
         <strong className="text-[20px] text-[#2E2E2E] font-semibold mt-[42px] mb-[28px] flex items-center">
           계정 정보 입력
         </strong>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleJoinMutate();
-          }}
-        >
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-col">
             <label className="text-[14px] text-[#333] opacity-60 pl-[6px]" htmlFor="email">
               조직이름
@@ -158,9 +106,9 @@ const NewWorkSpacePage = () => {
             />
           </div>
           <div className="flex justify-center">
-            <button className="w-full text-lg py-[12px] px-[22px] bg-[#7173FA] text-white rounded-lg shadow-md">
-              {handleJoin.isPending ? '가입중입니다...' : '가입하기'}
-            </button>
+            <Button theme="primary" type="submit" isDisabled={createWorkspacePending} isFullWidth>
+              가입하기
+            </Button>
           </div>
         </form>
       </div>

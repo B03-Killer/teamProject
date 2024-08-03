@@ -20,6 +20,7 @@ export const AuthStoreProvider = ({ children }: StrictPropsWithChildren) => {
   useEffect(() => {
     const { data: authListener } = supabase.auth.onAuthStateChange((_, session) => {
       if (!session || !storeRef.current) return;
+
       storeRef.current.getState().login(session.user);
     });
 
