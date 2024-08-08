@@ -124,7 +124,7 @@ const SignUpPage = () => {
                     type="button"
                     onClick={() => handleEmailCheck(email)}
                     disabled={emailCheckMutation.isPending ? true : false}
-                    className="w-full text-sm py-[12px] bg-[#7173FA] text-white rounded-lg shadow-md"
+                    className="w-full flex-shrink text-sm py-[12px] bg-[#7173FA] text-white rounded-lg shadow-md"
                   >
                     {emailCheckMutation.isPending ? '확인중...' : '중복확인'}
                   </button>
