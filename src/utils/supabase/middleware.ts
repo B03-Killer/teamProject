@@ -2,6 +2,7 @@ import { redirectRoutes } from '@/constants/redirectRoutes';
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { getCurrentRoute } from './getCurrentRoute';
+import { captureMessage } from '@sentry/nextjs';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -33,6 +34,14 @@ export async function updateSession(request: NextRequest) {
 
   const path = request.nextUrl.pathname;
   const workspaceId = request.cookies.get('workspaceId')?.value;
+
+  const isWorkspaceIdCookieMissing = user && !workspaceId && path.startsWith(`/${workspaceId}`);
+
+  if (isWorkspaceIdCookieMissing) {
+    captureMessage('현재 쿠키값에 workspaceId가 없어서 센트리 에러를 로깅합니다.', {
+      level: 'error'
+    });
+  }
 
   const target = getCurrentRoute({ routes: redirectRoutes, path });
 
