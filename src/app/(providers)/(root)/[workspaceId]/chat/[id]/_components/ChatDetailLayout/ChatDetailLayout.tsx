@@ -9,7 +9,6 @@ import { useGetChannelName } from '../../_hook/useGetChannelName';
 
 const ChatDetailLayout = ({ children }: StrictPropsWithChildren) => {
   const [isOpenSidebar, setIsOpenSidebar] = useState(false);
-
   const channelName = useGetChannelName();
 
   const handleOpenSidebar = () => {

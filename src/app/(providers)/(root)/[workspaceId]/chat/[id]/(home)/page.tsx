@@ -1,5 +1,3 @@
-'use client';
-
 import ChatNotice from '../_components/ChatNotice';
 import MessagesContainer from '../_components/MessagesContainer';
 import Messages from '../_components/Messages';

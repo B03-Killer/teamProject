@@ -1,3 +1,5 @@
+'use client';
+
 import { StrictPropsWithChildren } from '@/types/common';
 import { useState } from 'react';
 import MessageSender from '../MessageSender';

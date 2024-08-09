@@ -13,7 +13,7 @@ export const QUERY_KEYS = {
   SEARCH_WORKSPACE_USERS: (workspace_id: number | null, term: string) => ['searchWorkspaceUsers', workspace_id, term],
   USERS_IN_CHANNEL: (channel_id: number) => ['usersInChannel', channel_id],
   EXISTING_CHANNEL_ID: ['existingChannelId'],
-  CHANNEL_NAME: (id: string) => ['channelName', id],
+  CHANNEL_NAME: (id: number) => ['channelName', id],
   LATEST_NOTICE: (id: string) => ['latestNotice', id]
 };
 

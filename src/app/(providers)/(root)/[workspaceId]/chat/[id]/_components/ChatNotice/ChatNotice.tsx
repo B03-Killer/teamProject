@@ -1,3 +1,5 @@
+'use client';
+
 import { useParams } from 'next/navigation';
 import { BellIcon, ChevronDownIcon } from '@/icons';
 import Typography from '@/components/Typography';

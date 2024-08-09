@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useMemo, useRef } from 'react';
 import Chats from '../Chats';
 import { useParams } from 'next/navigation';

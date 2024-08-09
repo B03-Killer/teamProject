@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '../_constants/constants';
 import type { GetSearchWorkspaceUsersProps } from '@/types/workspaceUser';
 import type { GetChatChannelsProps, GetUsersInChannelRequestProps } from '@/types/channel';
+import { getGroupChannelName, getLatestNotice, getUsersInChannel } from '../_utils/getQueryOptions';
 
 export const useGetChatChannels = ({ workspace_id, workspace_user_id }: GetChatChannelsProps) => {
   return useQuery({
@@ -30,25 +31,13 @@ export const useGetSearchWorkspaceUsers = ({ workspace_id, term, workspace_user_
 };
 
 export const useGetUsersInChannel = ({ channel_id, workspace_user_id }: GetUsersInChannelRequestProps) => {
-  return useQuery({
-    queryKey: QUERY_KEYS.USERS_IN_CHANNEL(channel_id),
-    queryFn: () => api.channel.getUsersInChannel({ channel_id, workspace_user_id }),
-    refetchOnWindowFocus: false
-  });
+  return useQuery(getUsersInChannel({ channelId: channel_id, workspaceUserId: workspace_user_id }));
 };
 
-export const useGetGroupChannelName = ({ id }: { id: string }) => {
-  return useQuery({
-    queryKey: QUERY_KEYS.CHANNEL_NAME(id),
-    queryFn: () => api.chat.getChannelName({ id }),
-    refetchOnWindowFocus: false
-  });
+export const useGetGroupChannelName = ({ id }: { id: number }) => {
+  return useQuery(getGroupChannelName(id));
 };
 
 export const useGetLatestNotice = ({ id }: { id: string }) => {
-  return useQuery({
-    queryKey: QUERY_KEYS.LATEST_NOTICE(id),
-    queryFn: () => api.chat.getLatestNotice({ id }),
-    refetchOnWindowFocus: false
-  });
+  return useQuery(getLatestNotice(id));
 };

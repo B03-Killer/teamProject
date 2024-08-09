@@ -35,7 +35,7 @@ class ChatAPI {
     return data;
   };
 
-  getChannelName = async ({ id }: { id: string }): Promise<string> => {
+  getChannelName = async ({ id }: { id: number }): Promise<string> => {
     const { data } = await this.axios.get(`/api/channel/${id}/channel-name`);
 
     return data.data?.name || '';
