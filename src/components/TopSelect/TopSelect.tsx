@@ -3,6 +3,7 @@ import { TWorkspaceInfo } from '@/types/workspace';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import Typography from '../Typography';
+import { setWorkspaceIdCookie } from '@/utils/workspaceCookie';
 
 interface TopSelectProps {
   workspaceList: TWorkspaceInfo[];
@@ -13,15 +14,18 @@ interface TopSelectProps {
 const TopSelect = ({ workspaceList, isOpen, onClick }: TopSelectProps) => {
   const pathUrl = usePathname();
   const paths = pathUrl.split('/');
-  const setworkspaceUserIdData = useUserStore((state) => state.setWorkspaceUserIdData);
+  const setWorkspaceUserIdData = useUserStore((state) => state.setWorkspaceUserIdData);
 
   const setUrl = (workspaceId: number) => {
     const newUrl = paths.map((path, index) => (index === 1 ? workspaceId : path)).join('/');
     return newUrl;
   };
-  const handleClick = (workspaceUserId: string) => {
-    setworkspaceUserIdData(workspaceUserId);
+
+  const handleClick = ({ id, workspace_user_id }: { id: number; workspace_user_id: string }) => {
+    setWorkspaceIdCookie(id);
+    setWorkspaceUserIdData(workspace_user_id);
   };
+
   return (
     <div className={`fixed top-[50px] z-10 inset-0 ${isOpen ? 'h-full' : 'h-0'}`}>
       {isOpen && (
@@ -31,11 +35,11 @@ const TopSelect = ({ workspaceList, isOpen, onClick }: TopSelectProps) => {
             className={`fixed flex flex-col top-[52px] left-0 right-0 bg-white scrollbar-hide max-h-calc(100vh - 200px) 
           rounded-b-[6px] overflow-y-scroll snap-none gap-[16px] px-[16px] py-[16px] sm:px-[16px] sm:py-[6px] sm:max-w-[343px] sm:translate-x-[56px] sm:shadow-lg`}
           >
-            {workspaceList.map((workspace) => (
+            {workspaceList.map(({ id, workspace_user_id, name }) => (
               <Link
-                key={workspace.id}
-                href={setUrl(workspace.id)}
-                onClick={() => handleClick(workspace.workspace_user_id)}
+                key={id}
+                href={setUrl(id)}
+                onClick={() => handleClick({ id, workspace_user_id })}
                 className="flex flex-row justify-between px-[8px] sm:py-[8px]"
               >
                 <Typography
@@ -43,7 +47,7 @@ const TopSelect = ({ workspaceList, isOpen, onClick }: TopSelectProps) => {
                   color="grey500"
                   className="max-w-[299px] text-ellipsis overflow-hidden"
                 >
-                  {workspace.name}
+                  {name}
                 </Typography>
               </Link>
             ))}

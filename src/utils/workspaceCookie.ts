@@ -1,17 +1,17 @@
 import { getCookie, setCookie } from './cookieUtils';
 
-export const getWorkspaceUserId = () => {
+export const getWorkspaceUserIdCookie = () => {
   return getCookie('workspaceUserId');
 };
 
-export const getWorkspaceId = () => {
+export const getWorkspaceIdCookie = () => {
   return getCookie('workspaceId');
 };
 
-export const setWorkspaceUserId = (workspaceUserId: string) => {
+export const setWorkspaceUserIdCookie = (workspaceUserId: string) => {
   return setCookie('workspaceUserId', workspaceUserId, 365);
 };
 
-export const setWorkspaceId = (workspaceId: number) => {
+export const setWorkspaceIdCookie = (workspaceId: number) => {
   return setCookie('workspaceId', String(workspaceId), 365);
 };

@@ -1,9 +1,11 @@
-import { createServerClient } from "@supabase/ssr";
-import { NextResponse, type NextRequest } from "next/server";
+import { redirectRoutes } from '@/constants/redirectRoutes';
+import { createServerClient } from '@supabase/ssr';
+import { NextResponse, type NextRequest } from 'next/server';
+import { getCurrentRoute } from './getCurrentRoute';
 
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
-    request,
+    request
   });
 
   const supabase = createServerClient(
@@ -15,26 +17,31 @@ export async function updateSession(request: NextRequest) {
           return request.cookies.getAll();
         },
         setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
+          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({
-            request,
+            request
           });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
+          cookiesToSet.forEach(({ name, value, options }) => supabaseResponse.cookies.set(name, value, options));
+        }
+      }
     }
   );
 
   const {
-    data: { user },
+    data: { user }
   } = await supabase.auth.getUser();
 
-  if (user && request.nextUrl.pathname.startsWith("/login")) {
-    return NextResponse.redirect(new URL("/", request.url));
+  const path = request.nextUrl.pathname;
+  const workspaceId = request.cookies.get('workspaceId')?.value;
+
+  const target = getCurrentRoute({ routes: redirectRoutes, path });
+
+  if (user && target?.isGuestOnly) {
+    return NextResponse.redirect(new URL(`/${workspaceId}`, request.url));
+  }
+
+  if (!user && target?.isAuthOnly) {
+    return NextResponse.redirect(new URL('/', request.url));
   }
 
   return supabaseResponse;

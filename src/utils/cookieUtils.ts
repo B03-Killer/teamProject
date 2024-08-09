@@ -1,4 +1,6 @@
 export const setCookie = (name: string, value: string, days: number) => {
+  if (typeof window === 'undefined') return null;
+
   let expires = '';
   if (days) {
     const date = new Date();
@@ -9,8 +11,11 @@ export const setCookie = (name: string, value: string, days: number) => {
 };
 
 export const getCookie = (name: string) => {
+  if (typeof window === 'undefined') return null;
+
   const nameEQ = name + '=';
   const ca = document.cookie.split(';');
+
   for (let i = 0; i < ca.length; i++) {
     let c = ca[i];
     while (c.charAt(0) === ' ') c = c.substring(1, c.length);
@@ -20,10 +25,14 @@ export const getCookie = (name: string) => {
 };
 
 export const deleteCookie = (name: string) => {
+  if (typeof window === 'undefined') return null;
+
   document.cookie = name + '=; Max-Age=0; path=/';
 };
 
 export const deleteAllCookies = () => {
+  if (typeof window === 'undefined') return null;
+
   const cookies = document.cookie.split(';');
   cookies.forEach((cookie) => {
     const eqPos = cookie.indexOf('=');

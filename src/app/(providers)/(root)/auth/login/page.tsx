@@ -5,7 +5,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useSnackBar } from '@/providers/SnackBarContext';
-import { setWorkspaceId, setWorkspaceUserId } from '@/utils/workspaceCookie';
+import { setWorkspaceIdCookie, setWorkspaceUserIdCookie } from '@/utils/workspaceCookie';
 import { TopBar } from '@/components/TopBar';
 
 const LoginPage = () => {
@@ -45,8 +45,8 @@ const LoginPage = () => {
         return;
       }
 
-      setWorkspaceId(workspaceUserData.workspace_id);
-      setWorkspaceUserId(session.user.id);
+      setWorkspaceIdCookie(workspaceUserData.workspace_id);
+      setWorkspaceUserIdCookie(session.user.id);
       setUserData(session.user.id, workspaceUserData.workspace_id);
       route.replace(`/${workspaceUserData.workspace_id}`); // TODO : 메인 홈 으로 이동
     }

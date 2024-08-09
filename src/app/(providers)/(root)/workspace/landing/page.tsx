@@ -1,4 +1,5 @@
 'use client';
+
 import useShallowSelector from '@/hooks/useShallowSelector';
 import { useAuthStore } from '@/providers/AuthStoreProvider';
 import { AuthStoreTypes } from '@/store/authStore';
@@ -6,9 +7,9 @@ import useUserStore from '@/store/userStore';
 import { supabase } from '@/utils/supabase/supabaseClient';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { useLayoutEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnackBar } from '@/providers/SnackBarContext';
-import { getWorkspaceId, setWorkspaceId, setWorkspaceUserId } from '@/utils/workspaceCookie';
+import { getWorkspaceIdCookie, setWorkspaceIdCookie, setWorkspaceUserIdCookie } from '@/utils/workspaceCookie';
 import WorkConnectLogoIcon from '@/icons/WorkConnectLogo.svg';
 
 type UserType = {
@@ -21,7 +22,7 @@ const InviteCodePage = () => {
   const route = useRouter();
   const { user } = useShallowSelector<AuthStoreTypes, UserType>(useAuthStore, ({ user }) => ({ user }));
   const { openSnackBar } = useSnackBar();
-  const cookieWorkspaceId = getWorkspaceId();
+  const cookieWorkspaceId = getWorkspaceIdCookie();
 
   // TODO : 리팩터링 예정
   const handleSubmit = useMutation({
@@ -76,8 +77,8 @@ const InviteCodePage = () => {
           return;
         }
 
-        setWorkspaceId(workspaceData.id);
-        setWorkspaceUserId(user.id);
+        setWorkspaceIdCookie(workspaceData.id);
+        setWorkspaceUserIdCookie(user.id);
         setUserData(user.id, workspaceData.id);
 
         // TODO : 초대코드 입력 성공 시 메인페이지 이동처리하기
@@ -107,8 +108,8 @@ const InviteCodePage = () => {
         return;
       }
 
-      setWorkspaceId(workspaceData.id);
-      setWorkspaceUserId(user.id);
+      setWorkspaceIdCookie(workspaceData.id);
+      setWorkspaceUserIdCookie(user.id);
       setUserData(user.id, workspaceData.id);
 
       // TODO : 초대코드 입력 성공 시 메인페이지 이동처리하기
@@ -119,7 +120,7 @@ const InviteCodePage = () => {
 
   const { mutate: handleSubmitMutate } = handleSubmit;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const getSession = async () => {
       if (cookieWorkspaceId) {
         return;
@@ -145,8 +146,8 @@ const InviteCodePage = () => {
       }
 
       if (workspaceUser.workspace_id !== null) {
-        setWorkspaceId(workspaceUser.workspace_id);
-        setWorkspaceUserId(session.user.id);
+        setWorkspaceIdCookie(workspaceUser.workspace_id);
+        setWorkspaceUserIdCookie(session.user.id);
         setUserData(session.user.id, workspaceUser.workspace_id);
         return route.replace(`/${workspaceUser.workspace_id}`); // TODO: 홈 화면이동 처리
       }
