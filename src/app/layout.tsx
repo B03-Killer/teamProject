@@ -1,7 +1,6 @@
 import '@/styles/globals.css';
 import { Noto_Sans_KR } from '@next/font/google';
 import type { Metadata, Viewport } from 'next';
-import { Icons } from 'next/dist/lib/metadata/types/metadata-types';
 
 const notoSansKR = Noto_Sans_KR({ subsets: ['latin'] });
 
