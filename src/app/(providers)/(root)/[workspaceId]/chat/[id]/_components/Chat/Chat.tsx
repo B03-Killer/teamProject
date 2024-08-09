@@ -99,6 +99,8 @@ export const ChatMessage = memo(({ content, type, isMe, id, noticeUrl, openConte
     openContextMenu({ position: dynamicPos, id, type, text: content, isMe });
   };
 
+  console.log('@@');
+
   switch (type) {
     case CHAT_TYPE.image:
       return (
